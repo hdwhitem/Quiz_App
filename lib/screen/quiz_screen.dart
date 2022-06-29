@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/instance_manager.dart';
 import 'package:quiz_app/constants.dart';
+import 'package:quiz_app/controller/question_controller.dart';
 import 'package:quiz_app/model/questions.dart';
 import 'package:quiz_app/widget/option.dart';
 import '../widget/progress_bar.dart';
+import '../widget/question_card.dart';
 
 class QuizScreen extends StatelessWidget {
   const QuizScreen({Key? key}) : super(key: key);
@@ -23,6 +26,7 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final QuestionController questionController = Get.put(QuestionController());
     return Stack(children: [
       Container(
         decoration: const BoxDecoration(
@@ -36,49 +40,46 @@ class Body extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
             child: Column(
               children: [
-                ProgressBar(),
+                Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: kDefaultPadding),
+                    child: ProgressBar()),
                 const SizedBox(height: kDefaultPadding),
-                Text.rich(
-                  TextSpan(
-                    text: "Question 1",
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline4!
-                        .copyWith(color: Colors.white),
-                    children: [
-                      TextSpan(
-                        text: "/10",
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline4!
-                            .copyWith(color: Colors.white),
-                      ),
-                    ],
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: kDefaultPadding),
+                  child: Text.rich(
+                    TextSpan(
+                      text: "Question 1",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline4!
+                          .copyWith(color: Colors.white),
+                      children: [
+                        TextSpan(
+                          text: "/10",
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline4!
+                              .copyWith(color: Colors.white),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 const Divider(thickness: 2.5),
                 const SizedBox(height: kDefaultPadding),
-                Container(
-                  padding: const EdgeInsets.all(kDefaultPadding),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        data[0]['question'],
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline5!
-                            .copyWith(color: Colors.black),
-                      ),
-                      Option(),
-                      Option(),
-                      Option(),
-                    ],
+                Expanded(
+                  child: PageView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    controller: questionController.pageController,
+                    itemCount: questionController.questions.length,
+                    itemBuilder: (context, index) => QuestionCard(
+                      question: questionController.questions[index],
+                    ),
                   ),
                 ),
+                const SizedBox(height: kDefaultPadding)
               ],
             ),
           ),

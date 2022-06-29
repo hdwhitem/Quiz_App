@@ -1,12 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quiz_app/model/questions.dart';
 
 class QuestionController extends GetxController
     with SingleGetTickerProviderMixin {
   late AnimationController _animationController;
   late Animation _animation;
 
+  late PageController _pageController;
+  PageController get pageController => _pageController;
+
+  final List<Question> _questions = data
+      .map(
+        (question) => Question(
+          id: question['id'],
+          question: question['question'],
+          options: question['options'],
+          answer: question['answer_index'],
+        ),
+      )
+      .toList();
+
   Animation get animation => _animation;
+  List<Question> get questions => _questions;
+
+  bool _isAnswered = false;
+  bool get inAnswered => _isAnswered;
+
+  int _correntAns = 0;
+  int get correctAns => _correntAns;
+
+  int _selectAns = 0;
+  int get selectedAns => _selectAns;
+
+  RxInt _questionNumber = 1.obs;
+  RxInt get questionNumber => _questionNumber;
+
+  int _numOfCorrectAns = 0;
+  int get numOfCorrectAns => _numOfCorrectAns;
 
   @override
   void onInit() {
@@ -17,7 +48,31 @@ class QuestionController extends GetxController
         update();
       });
 
-    _animationController.forward();
+    _animationController.forward().whenComplete(nextQuestion);
+    _pageController = PageController();
     super.onInit();
+  }
+
+  void checkAns(Question question, int selectedIndex) {
+    _isAnswered = true;
+    _correntAns = question.answer;
+    _selectAns = selectedIndex;
+
+    if (_correntAns == _selectAns) _numOfCorrectAns++;
+    _animationController.stop();
+    update();
+    Future.delayed(Duration(seconds: 2), () {
+      nextQuestion();
+    });
+  }
+
+  void nextQuestion() {
+    if (_questionNumber.value != _questions.length) {
+      _isAnswered = false;
+      _pageController.nextPage(
+          duration: Duration(milliseconds: 250), curve: Curves.ease);
+      _animationController.reset();
+      _animationController.forward().whenComplete(nextQuestion);
+    }
   }
 }
