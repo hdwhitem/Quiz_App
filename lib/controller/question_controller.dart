@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quiz_app/model/questions.dart';
+import 'package:quiz_app/screen/score_screen.dart';
 
 class QuestionController extends GetxController
     with SingleGetTickerProviderMixin {
@@ -53,6 +54,14 @@ class QuestionController extends GetxController
     super.onInit();
   }
 
+  @override
+  void onClose() {
+    // TODO: implement onClose
+    super.onClose();
+    _animationController.dispose();
+    _pageController.dispose();
+  }
+
   void checkAns(Question question, int selectedIndex) {
     _isAnswered = true;
     _correntAns = question.answer;
@@ -61,7 +70,7 @@ class QuestionController extends GetxController
     if (_correntAns == _selectAns) _numOfCorrectAns++;
     _animationController.stop();
     update();
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(milliseconds: 150), () {
       nextQuestion();
     });
   }
@@ -73,6 +82,13 @@ class QuestionController extends GetxController
           duration: Duration(milliseconds: 250), curve: Curves.ease);
       _animationController.reset();
       _animationController.forward().whenComplete(nextQuestion);
+    } else {
+      Get.off(ScoreScreen(
+          numOfQuestions: questions.length, numOfCorrectAns: numOfCorrectAns));
     }
+  }
+
+  void updateTheQnNum(int index) {
+    _questionNumber.value = index + 1;
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:quiz_app/screen/score_screen.dart';
 import 'package:quiz_app/screen/startplaying_screen.dart';
 
 import 'screen/quiz_screen.dart';
@@ -12,11 +14,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Quiz',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      home: QuizScreen(),
+      home: StartPlaying(),
     );
   }
 }

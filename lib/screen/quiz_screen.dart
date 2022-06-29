@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/instance_manager.dart';
 import 'package:quiz_app/constants.dart';
 import 'package:quiz_app/controller/question_controller.dart';
@@ -46,33 +47,36 @@ class Body extends StatelessWidget {
                     child: ProgressBar()),
                 const SizedBox(height: kDefaultPadding),
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: kDefaultPadding),
-                  child: Text.rich(
-                    TextSpan(
-                      text: "Question 1",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline4!
-                          .copyWith(color: Colors.white),
-                      children: [
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: kDefaultPadding),
+                    child: Obx(
+                      () => Text.rich(
                         TextSpan(
-                          text: "/10",
+                          text:
+                              "Question ${questionController.questionNumber.value}",
                           style: Theme.of(context)
                               .textTheme
                               .headline4!
                               .copyWith(color: Colors.white),
+                          children: [
+                            TextSpan(
+                              text: "/${questionController.questions.length}",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline4!
+                                  .copyWith(color: Colors.white),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                ),
+                      ),
+                    )),
                 const Divider(thickness: 2.5),
                 const SizedBox(height: kDefaultPadding),
                 Expanded(
                   child: PageView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     controller: questionController.pageController,
+                    onPageChanged: questionController.updateTheQnNum,
                     itemCount: questionController.questions.length,
                     itemBuilder: (context, index) => QuestionCard(
                       question: questionController.questions[index],
