@@ -43,7 +43,7 @@ class QuestionController extends GetxController
   @override
   void onInit() {
     _animationController =
-        AnimationController(duration: const Duration(seconds: 30), vsync: this);
+        AnimationController(duration: const Duration(seconds: 10), vsync: this);
     _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController)
       ..addListener(() {
         update();

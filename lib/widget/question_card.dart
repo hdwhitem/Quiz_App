@@ -16,30 +16,32 @@ class QuestionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     QuestionController _controller = Get.put(QuestionController());
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: kDefaultPadding / 2),
-      padding: const EdgeInsets.all(kDefaultPadding),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(25),
-      ),
-      child: Column(
-        children: [
-          Text(
-            question.question,
-            style: Theme.of(context)
-                .textTheme
-                .headline5!
-                .copyWith(color: Colors.black),
-          ),
-          const SizedBox(height: kDefaultPadding),
-          ...List.generate(
-              question.options.length,
-              (index) => Option(
-                  text: question.options[index],
-                  index: index,
-                  press: () => _controller.checkAns(question, index)))
-        ],
+    return SingleChildScrollView(
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: kDefaultPadding / 2),
+        padding: const EdgeInsets.all(kDefaultPadding),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(25),
+        ),
+        child: Column(
+          children: [
+            Text(
+              question.question,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5!
+                  .copyWith(color: Colors.black),
+            ),
+            const SizedBox(height: kDefaultPadding),
+            ...List.generate(
+                question.options.length,
+                (index) => Option(
+                    text: question.options[index],
+                    index: index,
+                    press: () => _controller.checkAns(question, index)))
+          ],
+        ),
       ),
     );
   }
